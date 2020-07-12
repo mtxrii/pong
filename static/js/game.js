@@ -37,10 +37,14 @@ function keyDownHandler(event) {
     switch (event.keyCode) {
         case 38: // up arrow key code
             upArrowPressed = true;
+            hideTooltip();
             break;
         case 40: // down arrow key code
             downArrowPressed = true;
+            hideTooltip();
             break;
+        default:
+            showTooltip();
     }
 }
 
