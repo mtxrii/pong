@@ -30,6 +30,54 @@ function drawBall(x, y, radius, color) {
 }
 
 
+window.addEventListener("keydown", keyDownHandler);
+window.addEventListener("keyup",   keyUpHandler);
+
+function keyDownHandler(event) {
+    switch (event.keyCode) {
+        case 38: // up arrow key code
+            upArrowPressed = true;
+            break;
+        case 40: // down arrow key code
+            downArrowPressed = true;
+            break;
+    }
+}
+
+function keyUpHandler(event) {
+    switch (event.keyCode) {
+        case 38: // up arrow key code
+            upArrowPressed = false;
+            break;
+        case 40: // down arrow key code
+            downArrowPressed = false;
+            break;
+    }
+}
+
+
+function update() {
+    // move the paddle
+    if (upArrowPressed && player.y > 0) {
+        player.y -= 8;
+    }
+
+    else if (downArrowPressed && (player.y < (canvas.height - player.height))) {
+        player.y += 8;
+    }
+
+    // check if ball hits top or bottom wall
+
+
+    // move the ball
+    ball.x += ball.velocityX;
+    ball.y += ball.velocityY;
+
+    // ai paddle movement
+
+    // collision detection on paddles
+}
+
 function render() {
     context.fillStyle = "#000";
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -45,7 +93,9 @@ function render() {
     drawBall(ball.x, ball.y, ball.radius, ball.color);
 }
 
+function gameLoop() {
+    update();
+    render();
+}
 
-
-
-render();
+setInterval(gameLoop, 1000/6); // 60 fps
