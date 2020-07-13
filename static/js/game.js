@@ -29,6 +29,24 @@ function drawBall(x, y, radius, color) {
     context.fill();
 }
 
+function playRandom() {
+    const rand = Math.floor(Math.random() * 4) + 1;
+    switch (rand) {
+        case 1:
+            hitSound1.play();
+            break;
+        case 2:
+            hitSound2.play();
+            break;
+        case 3:
+            hitSound3.play();
+            break;
+        case 4:
+            hitSound4.play();
+            break;
+    }
+}
+
 
 window.addEventListener("keydown", keyDownHandler);
 window.addEventListener("keyup",   keyUpHandler);
@@ -60,8 +78,30 @@ function keyUpHandler(event) {
 }
 
 
+function reset() {
+    ball.x = canvas.width  / 2;
+    ball.y = canvas.height / 2;
+    ball.speed = 7;
+
+    ball.velocityX = -ball.velocityX;
+    ball.velocityY = -ball.velocityY;
+}
+
+function collisionDetect(entity, object) {
+    entity.top    = entity.y;
+    entity.left   = entity.x;
+    entity.right  = entity.x + entity.width;
+    entity.bottom = entity.y + entity.height;
+
+    object.top    = object.y - object.radius;
+    object.left   = object.x - object.radius;
+    object.right  = object.x + object.radius;
+    object.bottom = object.y + object.radius;
+
+    return (object.left < entity.right) && (object.top < entity.bottom) && (object.right > entity.left) && (object.bottom > entity.top);
+}
+
 function update() {
-    // move the paddle
     if (upArrowPressed && player.y > 0) {
         player.y -= 8;
     }
@@ -70,16 +110,46 @@ function update() {
         player.y += 8;
     }
 
-    // check if ball hits top or bottom wall
+    if (ball.y + ball.radius >= canvas.height || ball.y - ball.radius <= 0) {
+        wallHitSound.play();
+        ball.velocityY = -ball.velocityY;
+    }
 
+    if (ball.x + ball.radius >= canvas.width) {
+        scoreSound.play();
+        player.score += 1;
+        score("#1dbd08");
+        reset();
+    }
 
-    // move the ball
+    if (ball.x - ball.radius <= 0) {
+        scoreSound.play();
+        opponent.score += 1;
+        score("#bd3208");
+        reset();
+    }
+
     ball.x += ball.velocityX;
     ball.y += ball.velocityY;
 
-    // ai paddle movement
+    opponent.y += (ball.y - (opponent.y + opponent.height / 2)) * 0.047;
 
-    // collision detection on paddles
+    let target = (ball.x < canvas.width / 2) ? player : opponent;
+    if (collisionDetect(target, ball)) {
+        playRandom();
+        let angle = 0;
+        if (ball.y < (target.y + target.height / 2)) {
+            angle = (Math.PI / 4) * -1;
+        }
+        else if (ball.y > (target.y + target.height / 2)) {
+            angle = (Math.PI / 4);
+        }
+
+        ball.velocityX = ball.speed * Math.cos(angle) * (target === player ? 1 : -1);
+        ball.velocityY = ball.speed * Math.sin(angle);
+
+        ball.speed += 0.2;
+    }
 }
 
 function render() {
@@ -88,10 +158,10 @@ function render() {
 
     drawNet();
 
-    drawScore(  canvas.width/4, canvas.height/6, player.score);
-    drawScore(3*canvas.width/4, canvas.height/6, opponent.score);
+    drawScore(     canvas.width/4, canvas.height/6,   player.score);
+    drawScore( 3 * canvas.width/4, canvas.height/6, opponent.score);
 
-    drawPaddle(player.x,   player.y,   player.width,   player.height,   player.color);
+    drawPaddle(  player.x,   player.y,   player.width,   player.height,   player.color);
     drawPaddle(opponent.x, opponent.y, opponent.width, opponent.height, opponent.color);
 
     drawBall(ball.x, ball.y, ball.radius, ball.color);
@@ -102,4 +172,4 @@ function gameLoop() {
     render();
 }
 
-setInterval(gameLoop, 1000/6); // 60 fps
+setInterval(gameLoop, 1000/30);

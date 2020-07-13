@@ -1,6 +1,14 @@
 const canvas  = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 
+const hitSound1    = new Audio("./static/sounds/hitSound1.wav");
+const hitSound2    = new Audio("./static/sounds/hitSound2.wav");
+const hitSound3    = new Audio("./static/sounds/hitSound3.wav");
+const hitSound4    = new Audio("./static/sounds/hitSound4.wav");
+
+const scoreSound   = new Audio("./static/sounds/scoreSound.wav");
+const wallHitSound = new Audio("./static/sounds/wallHitSound.wav");
+
 const netWidth  = 4;
 const netHeight = canvas.height;
 
