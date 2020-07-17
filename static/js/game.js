@@ -132,7 +132,7 @@ function update() {
     ball.x += ball.velocityX;
     ball.y += ball.velocityY;
 
-    opponent.y += (ball.y - (opponent.y + opponent.height / 2)) * 0.047;
+    opponent.y += (ball.y - (opponent.y + opponent.height / 2)) * 0.048;
 
     let target = (ball.x < canvas.width / 2) ? player : opponent;
     if (collisionDetect(target, ball)) {
