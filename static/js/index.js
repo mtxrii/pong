@@ -23,8 +23,10 @@ async function paint(newColor) {
 async function score(color) {
     const white = "#FFF";
 
+    document.getElementById("canvas").style.animation = "shake 0.5s";
     paint(color);
     await sleep(1000);
+    document.getElementById("canvas").style.animation = "";
     paint(white);
 
 }
