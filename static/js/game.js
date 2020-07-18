@@ -21,7 +21,7 @@ function drawPaddle(x, y, width, height, color) {
 
 function drawBall(x, y, radius, color) {
     context.fillStyle = color;
-    context.beginPath()
+    context.beginPath();
 
     context.arc(x, y, radius, 0, Math.PI*2, true);
 
@@ -111,19 +111,25 @@ function update() {
     }
 
     if (ball.y + ball.radius >= canvas.height || ball.y - ball.radius <= 0) {
-        wallHitSound.play();
         ball.velocityY = -ball.velocityY;
+        if (sound) {
+            wallHitSound.play();
+        }
     }
 
     if (ball.x + ball.radius >= canvas.width) {
-        scoreSound.play();
+        if (sound) {
+            scoreSound.play();
+        }
         player.score += 1;
         score("#1dbd08");
         reset();
     }
 
     if (ball.x - ball.radius <= 0) {
-        scoreSound.play();
+        if (sound) {
+            scoreSound.play();
+        }
         opponent.score += 1;
         score("#bd3208");
         reset();
@@ -136,7 +142,9 @@ function update() {
 
     let target = (ball.x < canvas.width / 2) ? player : opponent;
     if (collisionDetect(target, ball)) {
-        playRandom();
+        if (sound) {
+            playRandom();
+        }
         let angle = 0;
         if (ball.y < (target.y + target.height / 2)) {
             angle = (Math.PI / 4) * -1;

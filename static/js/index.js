@@ -1,3 +1,10 @@
+let sound = true;
+
+function toggleSound() {
+    sound = !sound;
+}
+
+
 function showTooltip() {
     let popup = document.getElementById("tooltip");
     popup.classList.toggle("show", true);
